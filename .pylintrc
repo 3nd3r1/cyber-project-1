@@ -1,0 +1,4 @@
+[MAIN]
+
+load-plugins=pylint_django
+django-settings-module=arenabuilds.settings
