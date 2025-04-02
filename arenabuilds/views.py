@@ -3,10 +3,14 @@ from django.core.checks import messages
 from django.shortcuts import redirect, render
 
 from arenabuilds.forms import LoginForm
+from arenabuilds.models import Build, Champion
 
 
 def home(request):
-    return render(request, "home.html")
+    builds = Build.objects.all()
+    champions = Champion.objects.all()
+
+    return render(request, "home.html", {"builds": builds, "champions": champions})
 
 def logout_view(request):
     logout(request)
