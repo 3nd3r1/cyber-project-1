@@ -4,7 +4,7 @@ from django.db import models
 
 class Champion(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    icon = models.ImageField(upload_to="champions/", null=True, blank=True)
+    icon_url = models.URLField(null=True)
 
     def __str__(self):
         return self.name
@@ -12,7 +12,7 @@ class Champion(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    icon = models.ImageField(upload_to="items/", null=True, blank=True)
+    icon_url = models.URLField(null=True)
 
     def __str__(self):
         return self.name
@@ -20,7 +20,7 @@ class Item(models.Model):
 
 class Augment(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    icon = models.ImageField(upload_to="augments/", null=True, blank=True)
+    icon_url = models.URLField(null=True)
 
     def __str__(self):
         return self.name
