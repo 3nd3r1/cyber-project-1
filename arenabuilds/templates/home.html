@@ -11,44 +11,93 @@
     <h2>Latest Builds</h2>
 </div>
 
-<div class="w-100 d-flex flex-column align-items-center gap-4">
-    {% for build in builds %}
-        <div class="bg-dark rounded shadow-sm d-flex flex-row gap-4 p-4">
-            <div class="d-flex align-items-center">
-                <img src="{{build.champion.icon_url}}" alt="{{ build.champion.name }}" width="80" height="80">
-            </div>
-            <div class="d-flex flex-column justify-content-around">
-                <div>
-                    <h6>{{ build.title }}</h6>
-                </div>
-                
-                <div class="d-flex flex-column gap-2">
-                    {% if build.augments.count > 0 %}
-                    <div>
-                        <div class="d-flex gap-1">
-                            {% for augment in build.augments.all %}
-                            <img src="{{augment.icon_url}}" alt="{{ augment.name }}" width="30" height="30" data-bs-toggle="tooltip" title="{{ augment.name }}">
-                            {% endfor %}
+<div class="w-100 d-flex flex-row justify-content-center">
+    <div class="w-50 d-flex flex-column gap-4">
+        {% for build in builds %}
+            <div class="bg-dark rounded shadow-sm d-flex flex-column w-100">
+                <div class="cursor-pointer d-flex flex-row gap-4 p-4" data-bs-toggle="collapse" data-bs-target="#build-details-{{ build.id }}" aria-expanded="false" aria-controls="build-details-{{ build.id }}">
+                    <div class="d-flex align-items-center">
+                        <img src="{{build.champion.icon_url}}" alt="{{ build.champion.name }}" width="80" height="80">
+                    </div>
+                    <div class="d-flex flex-column justify-content-around flex-grow-1">
+                        <div class="d-flex flex-row justiy-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <h6>{{ build.title }}</h6>
+                            </div>
+                            <div>
+                                <i class="toggle-icon"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex flex-column gap-2">
+                            {% if build.augments.count > 0 %}
+                            <div>
+                                <div class="d-flex gap-1">
+                                    {% for augment in build.augments.all %}
+                                    <img src="{{augment.icon_url}}" alt="{{ augment.name }}" width="30" height="30" data-bs-toggle="tooltip" title="{{ augment.name }}">
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if build.items.count > 0 %}
+                            <div>
+                                <div class="d-flex gap-1">
+                                    {% for item in build.items.all %}
+                                    <img src="{{item.icon_url}}" alt="{{ item.name }}"  width="30" height="30" data-bs-toggle="tooltip" title="{{ item.name }}">
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
-                    {% endif %}
-                    
-                    {% if build.items.count > 0 %}
-                    <div>
-                        <div class="d-flex gap-1">
-                            {% for item in build.items.all %}
-                            <img src="{{item.icon_url}}" alt="{{ item.name }}"  width="30" height="30" data-bs-toggle="tooltip" title="{{ item.name }}">
-                            {% endfor %}
+                </div>
+
+                <div class="collapse" id="build-details-{{ build.id }}">
+                    <div class="p-4 border-top border-secondary">
+                        <p>{{ build.description }}</p>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <small class="text-muted">Created by {{ build.author.username }} on {{ build.created_at|date:"M d, Y" }}</small>
+                            {% if build.created_at != build.updated_at %}
+                                <small class="text-muted">Last updated: {{ build.updated_at|date:"M d, Y" }}</small>
+                            {% endif %}
                         </div>
                     </div>
-                    {% endif %}
                 </div>
             </div>
+        {% empty %}
+        <div class="w-100 d-flex justify-content-center">
+            <p>No builds found.</p>
         </div>
-    {% empty %}
-    <div class="w-100 d-flex justify-content-center">
-        <p>No builds found.</p>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    
+    .collapse {
+        transition: all 0.3s ease;
+    }
+    
+    [aria-expanded="true"] .toggle-icon::after {
+        content: "-";
+        transition: transform 0.3s ease;
+    }
+    
+    [aria-expanded="false"] .toggle-icon::after {
+        content: "+";
+        transition: transform 0.3s ease;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
 {% endblock %}
