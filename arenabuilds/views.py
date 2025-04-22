@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.checks import messages
 from django.shortcuts import redirect, render
 
-from arenabuilds.forms import LoginForm
+from arenabuilds.forms import CreateBuildForm, LoginForm
 from arenabuilds.models import Build, Champion
 
 
@@ -12,9 +12,26 @@ def home(request):
 
     return render(request, "home.html", {"builds": builds, "champions": champions})
 
+
+def create(request):
+    if request.method == "POST":
+        form = CreateBuildForm(request.POST)
+        if form.is_valid():
+            build = form.save(user=request.user)
+            messages.Info(request, f"Build created: {build.title}")
+            return redirect("/")
+        else:
+            messages.Error(request, "Failed to create build")
+    else:
+        form = CreateBuildForm()
+
+    return render(request, "create.html", {"form": form})
+
+
 def logout_view(request):
     logout(request)
     return redirect("/")
+
 
 def login_view(request):
     if request.method == "POST":

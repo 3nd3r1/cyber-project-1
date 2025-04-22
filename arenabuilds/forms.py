@@ -1,6 +1,14 @@
 from django import forms
 
-from arenabuilds.models import User
+from arenabuilds.models import (
+    Augment,
+    Build,
+    BuildAugment,
+    BuildItem,
+    Champion,
+    Item,
+    User,
+)
 
 
 class LoginForm(forms.ModelForm):
@@ -14,3 +22,56 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["username", "password"]
+
+
+class CreateBuildForm(forms.ModelForm):
+    title = forms.CharField(
+        label="Build Title", widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    champion = forms.ModelChoiceField(
+        label="Champion",
+        queryset=Champion.objects.all(),
+        widget=forms.Select(attrs={"class": "form-select"}),
+    )
+    description = forms.CharField(
+        label="Description",
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 5}),
+    )
+
+    item_1 = forms.ModelChoiceField(queryset=Item.objects.all(), required=False)
+    item_2 = forms.ModelChoiceField(queryset=Item.objects.all(), required=False)
+    item_3 = forms.ModelChoiceField(queryset=Item.objects.all(), required=False)
+    item_4 = forms.ModelChoiceField(queryset=Item.objects.all(), required=False)
+    item_5 = forms.ModelChoiceField(queryset=Item.objects.all(), required=False)
+
+    augment_0 = forms.ModelChoiceField(queryset=Augment.objects.all(), required=False)
+    augment_1 = forms.ModelChoiceField(queryset=Augment.objects.all(), required=False)
+    augment_2 = forms.ModelChoiceField(queryset=Augment.objects.all(), required=False)
+    augment_3 = forms.ModelChoiceField(queryset=Augment.objects.all(), required=False)
+    augment_4 = forms.ModelChoiceField(queryset=Augment.objects.all(), required=False)
+    augment_5 = forms.ModelChoiceField(queryset=Augment.objects.all(), required=False)
+
+    class Meta:
+        model = Build
+        fields = ["title", "champion", "description"]
+
+    def save(self, commit=True, user=None):
+        build = super().save(commit=False)
+
+        if user:
+            build.author = user
+
+        if commit:
+            build.save()
+
+            for i in range(6):
+                item = self.cleaned_data.get(f"item_{i}")
+                if item:
+                    BuildItem.objects.create(build=build, item=item)
+
+            for i in range(6):
+                augment = self.cleaned_data.get(f"augment_{i}")
+                if augment:
+                    BuildAugment.objects.create(build=build, augment=augment)
+
+        return build
