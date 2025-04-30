@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.checks import messages
 from django.shortcuts import redirect, render
 
@@ -13,6 +14,8 @@ def home(request):
     return render(request, "home.html", {"builds": builds, "champions": champions})
 
 
+# Fix 1: check if user is logged in
+# @login_required
 def create(request):
     if request.method == "POST":
         form = CreateBuildForm(request.POST)
