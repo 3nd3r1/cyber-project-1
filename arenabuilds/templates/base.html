@@ -25,6 +25,14 @@
                     </li>
                 </ul>
             </div>
+            <div>
+                {% if request.user.is_authenticated %}
+                    <span>Hello, {{ request.user.username }}!</span>
+                    <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 

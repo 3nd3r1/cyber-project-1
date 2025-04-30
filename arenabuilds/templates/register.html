@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Login - ArenaBuilds{% endblock %}
+{% block title %}Register - ArenaBuilds{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="card w-50 p-0">
         <div class="card-header bg-primary text-white">
-            <h4>Login to Arena Builds</h4>
+            <h4>Register to Arena Builds</h4>
         </div>
         <div class="card-body">
             {% if messages %}
@@ -28,11 +28,11 @@
                         </div>
                     </div>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Register</button>
             </form>
         </div>
         <div class="card-footer text-center">
-            <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+            <p class="mb-0">Already have an account? <a href="{% url 'login' %}">Login</a></p>
         </div>
     </div>
 </div>
