@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.checks import messages
+from django.db.models import Q
 from django.shortcuts import redirect, render
 
-from arenabuilds.forms import CreateBuildForm, LoginForm, RegisterForm
+from arenabuilds.forms import CreateBuildForm, LoginForm, RegisterForm, SearchForm
 from arenabuilds.models import Build, Champion
 
 
@@ -29,6 +30,25 @@ def create(request):
         form = CreateBuildForm()
 
     return render(request, "create.html", {"form": form})
+
+
+def search(request):
+    form = SearchForm(request.GET)
+    builds = Build.objects.none()
+
+    if form.is_valid():
+        query = form.cleaned_data.get("query")
+
+        builds = Build.objects.all()
+
+        if query:
+            builds = builds.filter(
+                Q(title__icontains=query)
+                | Q(author__username__icontains=query)
+                | Q(champion__name__icontains=query)
+            )
+
+    return render(request, "search.html", {"form": form, "builds": builds})
 
 
 def logout_view(request):

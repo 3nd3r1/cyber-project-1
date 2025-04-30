@@ -1,14 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from arenabuilds.models import (
-    Augment,
-    Build,
-    BuildAugment,
-    BuildItem,
-    Champion,
-    Item,
-)
+from arenabuilds.models import Augment, Build, BuildAugment, BuildItem, Champion, Item
 
 
 class LoginForm(forms.Form):
@@ -19,6 +12,7 @@ class LoginForm(forms.Form):
         label="Password", widget=forms.PasswordInput(attrs={"class": "form-control"})
     )
 
+
 class RegisterForm(forms.ModelForm):
     username = forms.CharField(
         label="Username", widget=forms.TextInput(attrs={"class": "form-control"})
@@ -26,6 +20,7 @@ class RegisterForm(forms.ModelForm):
     password = forms.CharField(
         label="Password", widget=forms.PasswordInput(attrs={"class": "form-control"})
     )
+
     class Meta:
         model = User
         fields = ["username", "password"]
@@ -89,3 +84,13 @@ class CreateBuildForm(forms.ModelForm):
                     BuildAugment.objects.create(build=build, augment=augment)
 
         return build
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField(
+        label="Search",
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Search builds"}
+        ),
+    )
