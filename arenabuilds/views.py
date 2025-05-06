@@ -1,7 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.core.checks import messages
-from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from arenabuilds.forms import CreateBuildForm, LoginForm, RegisterForm, SearchForm
@@ -69,10 +67,26 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
+
+            # Vuln 4: A09 Security Logging Failure: Not logging login attempts
+
             user = authenticate(username=username, password=password)
             if user is not None:
+                # Fix 4: Log all login attempts
+                # LoginLog.objects.create(
+                #     username=username,
+                #     ip_address=request.META.get("REMOTE_ADDR"),
+                #     success=True,
+                # )
                 login(request, user)
                 return redirect("/")
+
+            # Fix 4: Log all login attempts
+            # LoginLog.objects.create(
+            #     username=username,
+            #     ip_address=request.META.get("REMOTE_ADDR"),
+            #     success=False,
+            # )
         else:
             messages.Error(request, "Invalid username or password")
     else:

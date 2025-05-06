@@ -2,6 +2,16 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class LoginLog(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    username = models.CharField(max_length=150)
+    ip_address = models.GenericIPAddressField()
+    success = models.BooleanField()
+
+    def __str__(self):
+        return f"login event - {self.username} - {self.timestamp}"
+
+
 class Champion(models.Model):
     name = models.CharField(max_length=100, unique=True)
     icon_url = models.URLField(null=True)
