@@ -40,13 +40,20 @@ def search(request):
         query = form.cleaned_data.get("query")
 
         builds = Build.objects.all()
-
         if query:
-            builds = builds.filter(
-                Q(title__icontains=query)
-                | Q(author__username__icontains=query)
-                | Q(champion__name__icontains=query)
+            # Vuln 2: SQL injection
+            builds = list(
+                Build.objects.raw(
+                    f"SELECT * FROM arenabuilds_build WHERE title LIKE '%{query}%'",
+                )
             )
+
+            # Fix 2: use Django models instead of raw SQL
+            # builds = builds.filter(
+            #     Q(title__icontains=query)
+            #     | Q(author__username__icontains=query)
+            #     | Q(champion__name__icontains=query)
+            # )
 
     return render(request, "search.html", {"form": form, "builds": builds})
 
