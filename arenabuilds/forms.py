@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 from arenabuilds.models import Augment, Build, BuildAugment, BuildItem, Champion, Item
 
@@ -24,6 +26,21 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["username", "password"]
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        if not password:
+            raise forms.ValidationError("Password is required")
+
+        try:
+            # Vuln 5: A07 Authentication Failures: No password validation
+            pass
+            # Fix 5: validate the password
+            # validate_password(password)
+        except ValidationError as e:
+            self.add_error("password", e)
+
+        return password
 
     def save(self, commit=True):
         user = super().save(commit=False)
