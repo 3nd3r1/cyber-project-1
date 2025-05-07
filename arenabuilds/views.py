@@ -13,6 +13,7 @@ def home(request):
     return render(request, "home.html", {"builds": builds, "champions": champions})
 
 
+# Vuln 1: A01:2021 Broken Access Control: Create page is accessible to everyone
 # Fix 1: check if user is logged in
 # @login_required
 def create(request):
@@ -37,7 +38,7 @@ def search(request):
 
         builds = Build.objects.all()
         if query:
-            # Vuln 2: SQL injection
+            # Vuln 2: A03:2021: SQL Injection: Using raw SQL
             builds = list(
                 Build.objects.raw(
                     f"SELECT * FROM arenabuilds_build WHERE title LIKE '%{query}%'",
@@ -66,8 +67,7 @@ def login_view(request):
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
 
-            # Vuln 4: A09 Security Logging Failure: Not logging login attempts
-
+            # Vuln 4: A09:2021: Security Logging Failure: Not logging login attempts
             user = authenticate(username=username, password=password)
             if user is not None:
                 # Fix 4: Log all login attempts

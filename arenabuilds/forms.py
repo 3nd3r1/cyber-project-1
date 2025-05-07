@@ -33,7 +33,7 @@ class RegisterForm(forms.ModelForm):
             raise forms.ValidationError("Password is required")
 
         try:
-            # Vuln 5: A07 Authentication Failures: No password validation
+            # Vuln 5: A07:2021: Authentication Failures: No password validation
             pass
             # Fix 5: validate the password
             # validate_password(password)

@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# Vuln 3: Crypthographic failure: Crypto key checked in source code
+# Vuln 3: A02:2021: Crypthographic failure: Crypto key checked in source code
 SECRET_KEY = "django-insecure-q6koaj%g(axcp640l%oi88c)prmd=#ocxp@vz1*sn6xerw(d=y"
 # Fix 3: use env variables
 # SECRET_KEY = os.environ.get("SECRET_KEY")
