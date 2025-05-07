@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.core.checks import messages
+from django.contrib import messages
 from django.shortcuts import redirect, render
 
 from arenabuilds.forms import CreateBuildForm, LoginForm, RegisterForm, SearchForm
@@ -20,10 +20,8 @@ def create(request):
         form = CreateBuildForm(request.POST)
         if form.is_valid():
             build = form.save(user=request.user)
-            messages.Info(request, f"Build created: {build.title}")
+            messages.info(request, f"Build created: {build.title}")
             return redirect("/")
-        else:
-            messages.Error(request, "Failed to create build")
     else:
         form = CreateBuildForm()
 
@@ -87,8 +85,7 @@ def login_view(request):
             #     ip_address=request.META.get("REMOTE_ADDR"),
             #     success=False,
             # )
-        else:
-            messages.Error(request, "Invalid username or password")
+            messages.error(request, "Invalid username or password")
     else:
         form = LoginForm()
 
@@ -103,8 +100,7 @@ def register_view(request):
             if user is not None:
                 login(request, user)
                 return redirect("/")
-        else:
-            messages.Error(request, "Failed to create user")
+            messages.error(request, "Failed to create user")
     else:
         form = RegisterForm()
 
